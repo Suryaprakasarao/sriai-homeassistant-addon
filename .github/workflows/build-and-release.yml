@@ -79,7 +79,7 @@ jobs:
           docker buildx build --platform linux/amd64,linux/arm64 \
             -t $IMAGE_NAME:$LATEST_RELEASE \
             -t $IMAGE_NAME:latest \
-            -f sriai/Dockerfile . --push
+            -f sriai/Dockerfile sriai --push
   
 
       - name: Commit updated files

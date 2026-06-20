@@ -20,4 +20,3 @@ map:
   - share
 options: {}
 schema: {}
-image: ghcr.io/suryaprakasarao/sriai-homeassistant-addon

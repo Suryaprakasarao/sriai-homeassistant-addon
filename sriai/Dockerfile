@@ -22,11 +22,11 @@ ENV WEBUI_NAME="SriAi"
 
 # Overlay SriAi favicons / logos / splash over the upstream static assets so
 # none of the original branding is visible in the dashboard UI.
-COPY sriai/branding/ /sriai-branding/
+COPY branding/ /sriai-branding/
 RUN sh /sriai-branding/apply-branding.sh
 # --------------------------------------------------------------------------
 
-COPY sriai/run.sh .
+COPY run.sh .
 RUN chmod a+x run.sh
 
 # Run the wrapper script on startup
