@@ -64,15 +64,24 @@ foreach ($s in $sizes) {
     $b.Dispose()
 }
 
-# --- favicon.ico (32px) ---
+# --- favicon.ico (64px, 32-bit PNG-embedded ICO for full-color gradient) ---
 $icoBmp = New-IconBitmap 64 $monogram
-$hicon = $icoBmp.GetHicon()
-$icon = [System.Drawing.Icon]::FromHandle($hicon)
+$ms = New-Object System.IO.MemoryStream
+$icoBmp.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png)
+$png = $ms.ToArray()
+$ms.Dispose(); $icoBmp.Dispose()
+
 $icoPath = Join-Path $here 'favicon.ico'
-$fs = [System.IO.File]::Open($icoPath, [System.IO.FileMode]::Create)
-$icon.Save($fs)
-$fs.Close()
-$icon.Dispose(); $icoBmp.Dispose()
+$out = New-Object System.IO.BinaryWriter([System.IO.File]::Open($icoPath, [System.IO.FileMode]::Create))
+# ICONDIR
+$out.Write([UInt16]0); $out.Write([UInt16]1); $out.Write([UInt16]1)
+# ICONDIRENTRY
+$out.Write([Byte]64); $out.Write([Byte]64); $out.Write([Byte]0); $out.Write([Byte]0)
+$out.Write([UInt16]1); $out.Write([UInt16]32)
+$out.Write([UInt32]$png.Length); $out.Write([UInt32]22)
+# PNG payload
+$out.Write($png)
+$out.Close()
 Write-Host "wrote $icoPath"
 
 # --- Home Assistant add-on store icon (sriai/icon.png, 256px) ---
